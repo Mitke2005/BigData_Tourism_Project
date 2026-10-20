@@ -1,0 +1,96 @@
+### kafka-topics --list
+__consumer_offsets
+tourism-control
+tourism-dead-letter
+tourism-input
+tourism-output
+tourism-reviews
+tourism-state-batch
+tourism-state-spots
+### kafka-topics --describe
+Topic: tourism-dead-letter	TopicId: Wg11DwJKTayLym_EpU2Nxw	PartitionCount: 1	ReplicationFactor: 1	Configs: cleanup.policy=delete
+	Topic: tourism-dead-letter	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+Topic: tourism-state-batch	TopicId: mZ_enqeQRq2f__41vIaAOw	PartitionCount: 1	ReplicationFactor: 1	Configs: cleanup.policy=compact,max.message.bytes=10485760
+	Topic: tourism-state-batch	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+Topic: tourism-state-spots	TopicId: LCvctE6dT7m2cm1fHl5FpA	PartitionCount: 1	ReplicationFactor: 1	Configs: cleanup.policy=compact,max.message.bytes=10485760
+	Topic: tourism-state-spots	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+Topic: tourism-control	TopicId: QLnvzaAXSMiLjhxvmvOtow	PartitionCount: 1	ReplicationFactor: 1	Configs: cleanup.policy=compact
+	Topic: tourism-control	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+Topic: tourism-input	TopicId: bdEcViW2ScWf-B6_ltt4ig	PartitionCount: 3	ReplicationFactor: 1	Configs: cleanup.policy=delete
+	Topic: tourism-input	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+	Topic: tourism-input	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+	Topic: tourism-input	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+Topic: tourism-output	TopicId: KdoVtoCIS2uQqumQYK7sSA	PartitionCount: 3	ReplicationFactor: 1	Configs: cleanup.policy=delete
+	Topic: tourism-output	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+	Topic: tourism-output	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+	Topic: tourism-output	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+Topic: __consumer_offsets	TopicId: li1DDIs4RcixVLxzrxNgKg	PartitionCount: 50	ReplicationFactor: 1	Configs: compression.type=producer,cleanup.policy=compact,segment.bytes=104857600
+	Topic: __consumer_offsets	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 3	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 4	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 5	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 6	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 7	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 8	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 9	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 10	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 12	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 13	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 14	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 15	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 16	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 17	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 18	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 19	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 20	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 21	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 22	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 23	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 24	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 25	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 26	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 27	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 28	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 29	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 30	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 31	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 32	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 33	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 34	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 35	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 36	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 37	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 38	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 39	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 40	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 41	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 42	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 43	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 44	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 45	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 46	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 47	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 48	Leader: 0	Replicas: 0	Isr: 0
+	Topic: __consumer_offsets	Partition: 49	Leader: 0	Replicas: 0	Isr: 0
+Topic: tourism-reviews	TopicId: VMfb1kzIRu-sWPJlqJM0TQ	PartitionCount: 3	ReplicationFactor: 1	Configs: cleanup.policy=compact,retention.ms=-1
+	Topic: tourism-reviews	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+	Topic: tourism-reviews	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+	Topic: tourism-reviews	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+### config compact
+Dynamic configs for topic tourism-state-spots are:
+  cleanup.policy=compact sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:cleanup.policy=compact, DEFAULT_CONFIG:log.cleanup.policy=delete}
+  max.message.bytes=10485760 sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:max.message.bytes=10485760, DEFAULT_CONFIG:message.max.bytes=1048588}
+### offsets tourism-input
+tourism-input:0:1993
+tourism-input:1:1
+tourism-input:2:3969
+### console-consumer tourism-input
+Partition:0	Offset:0	sess_2	{"event_id": "db0f7e43-3b8b-429a-9964-dbb9f2ac4359", "session_id": "sess_2", "event_type": "SIMULATED_VIEW", "spot_id": 2, "stt": 2, "name": "Tháp Bà Ponagar", "location": "Khánh Hòa", "description": "Công trình kiến trúc Chăm cổ, nơi du khách có thể tìm hiểu về lịch sử và văn hóa Chăm", "rating": null, "is_user_review": false, "source": "simulated_producer", "cycle": 1, "image": "https://tse4.mm.bing.net/th?id=OIP.OHY4mpZ7m_uKpGiC1e9D8wHaF7&pid=Api&P=0&h=220", "keywords": ["giáo dục", "trong nhà", "văn hóa", "di tích", "chụp ảnh", "tháp", "tham quan", "lịch sử"], "latitude": 12.236236, "longitude": 109.203521, "timestamp": "2026-10-17 20:57:30"}
+Partition:0	Offset:1	sess_5	{"event_id": "249602f5-a65f-4da2-9a96-a275c40ba0a0", "session_id": "sess_5", "event_type": "SIMULATED_VIEW", "spot_id": 5, "stt": 5, "name": "Suối Ba Hồ", "location": "Khánh Hòa", "description": "Gồm ba hồ nước trong xanh nằm trên núi, thích hợp cho trekking và tắm suối", "rating": null, "is_user_review": false, "source": "simulated_producer", "cycle": 1, "image": "https://cdn1.nhatrangtoday.vn/images/photos/kdl-ba-ho-nha-trang-2.jpg", "keywords": ["ngoài trời", "solo travel", "leo núi", "khám phá thiên nhiên", "suối", "phù hợp giới trẻ", "vui chơi", "hiking", "chụp ảnh", "nhóm bạn", "thể lực tốt"], "latitude": 12.1012156, "longitude": 109.0749055, "timestamp": "2026-10-17 20:57:36"}
+Partition:0	Offset:2	sess_2	{"event_id": "5f1eb5b0-b9ca-4cf3-babe-68b42bfb1895", "session_id": "sess_2", "event_type": "SIMULATED_VIEW", "spot_id": 8, "stt": 8, "name": "Chùa Láng Cát", "location": "Kiên Giang", "description": "Ngôi chùa cổ kính mang đậm dấu ấn Phật giáo.", "rating": null, "is_user_review": false, "source": "simulated_producer", "cycle": 1, "image": "https://tse4.mm.bing.net/th?id=OIP.8FZLE40kihfcd4nTAkjEZQHaFj&pid=Api&P=0&h=220", "keywords": ["ngoài trời", "phù hợp người lớn tuổi", "hóng gió", "đi cùng gia đình", "tâm linh", "tôn giáo", "tắm biển", "văn hóa", "yên tĩnh", "chùa", "tham quan", "mùa hè"], "latitude": 9.9988763, "longitude": 105.0945422, "timestamp": "2026-10-17 20:57:43"}
+Partition:0	Offset:3	sess_5	{"event_id": "ba81db8e-317e-4712-9b4b-fcd3f5ed0140", "session_id": "sess_5", "event_type": "SIMULATED_VIEW", "spot_id": 11, "stt": 11, "name": "Nhà Thờ Gỗ Kon Tum", "location": "Kon Tum", "description": "Một biểu tượng của Kon Tum mang kiến trúc độc đáo pha trộn giữa phong cách Roman và nét văn hóa Tây Nguyên", "rating": null, "is_user_review": false, "source": "simulated_producer", "cycle": 1, "image": "https://tse1.mm.bing.net/th?id=OIP.RzH7A5ksQ9692U5WrfW10gHaFu&pid=Api&P=0&h=220", "keywords": ["tâm linh", "tôn giáo", "văn hóa", "yên tĩnh", "chụp ảnh", "tham quan"], "latitude": 14.6995372, "longitude": 107.9323831, "timestamp": "2026-10-17 20:57:48"}
+Partition:0	Offset:4	sess_2	{"event_id": "bae5b226-9034-48f7-bc5e-888799fe5501", "session_id": "sess_2", "event_type": "SIMULATED_VIEW", "spot_id": 14, "stt": 14, "name": "Đỉnh Ngọc Linh", "location": "Kon Tum", "description": "Ngọn núi cao nhất ở Tây Nguyên, thuộc dãy Trường Sơn, là nơi sinh sống của nhiều loài động thực vật quý hiếm.", "rating": null, "is_user_review": false, "source": "simulated_producer", "cycle": 1, "image": "https://tse4.mm.bing.net/th?id=OIP.yYzLVlMeUpU6vk_7d0gLjAHaE8&pid=Api&P=0&h=220", "keywords": ["ngoài trời", "thám hiểm", "solo travel", "leo núi", "khám phá thiên nhiên", "phù hợp giới trẻ", "hiking", "chụp ảnh", "nhóm bạn", "núi", "thể lực tốt"], "latitude": 15.0690415, "longitude": 107.9749364, "timestamp": "2026-10-17 20:57:54"}
+Processed a total of 5 messages

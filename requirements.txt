@@ -1,0 +1,17 @@
+# Big Data Tourism Project - Dependencies
+# Khoa CNTT - Truong Dai hoc Cong Thuong TP.HCM (HUIT)
+# Mon hoc: Cong nghe Du lieu Lon (Big Data)
+
+# Core Big Data Engines (Khuyên dùng Python 3.10/3.11 để tương thích tốt nhất với PySpark)
+# Báo cáo kỹ thuật sử dụng PySpark 3.4.1 (Tương thích Maven: org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1)
+pyspark==3.4.1
+kafka-python-ng>=2.2.2
+
+# Web Serving & Real-Time Dashboard
+flask>=3.0.0
+
+# Data Science & Machine Learning (Sử dụng PySpark MLlib phân tán làm lõi chính)
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=14.0.0
+openpyxl>=3.1.0

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân Tích Dữ Liệu Du Lịch & Gợi Ý Lịch Trình Thông Minh | Big Data Pipeline</title>
+    <meta name="description" content="Đồ án Big Data: Phân tích dữ liệu du lịch thời gian thực và gợi ý lịch trình thông minh ứng dụng Kafka, Spark Streaming, HDFS Parquet, K-Means, TF-IDF và FP-Growth.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css?v=12">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">VIETNAM TRAVEL INTELLIGENCE</h1>
+                    <p class="brand-subtitle">Hệ sinh thái Big Data: Kafka • Spark Streaming • HDFS Parquet • MLlib</p>
+                </div>
+            </div>
+
+            <!-- Pipeline Live Status Indicator -->
+            <div class="pipeline-status-bar" id="pipeline-status-bar">
+                <div class="status-node" id="status-kafka">
+                    <span class="status-dot pulse-green" id="dot-kafka"></span>
+                    <span class="status-label" id="label-kafka">Kafka Ingest: <strong>9092</strong></span>
+                </div>
+                <div class="status-divider">→</div>
+                <div class="status-node" id="status-spark">
+                    <span class="status-dot pulse-green" id="dot-spark"></span>
+                    <span class="status-label" id="label-spark">Spark MLlib: <strong>Streaming</strong></span>
+                </div>
+                <div class="status-divider">→</div>
+                <div class="status-node" id="status-hdfs">
+                    <span class="status-dot pulse-blue" id="dot-hdfs"></span>
+                    <span class="status-label" id="label-hdfs">HDFS Lake: <strong>Parquet (Snappy)</strong></span>
+                </div>
+                <div class="status-divider">→</div>
+                <div class="status-node" id="status-live">
+                    <span class="status-dot pulse-orange" id="dot-live"></span>
+                    <span class="status-label">Live Web: <strong id="stream-status-text">Connected</strong></span>
+                </div>
+            </div>
+
+            <!-- Multi-Account Switcher (Demo Người A đánh giá -> Người B thấy Real-time) -->
+            <div class="account-switcher-box">
+                <span class="acc-switch-title">👥 Đăng nhập Demo:</span>
+                <div class="account-pills" id="account-pills">
+                    <button class="acc-pill active" data-user="Nguyễn Trường Nhu (Người dùng A)" data-color="#4F46E5">
+                        <span class="acc-badge badge-a">A</span>
+                        <span class="acc-name">Nguyễn Trường Nhu</span>
+                        <span class="acc-role">(User A)</span>
+                    </button>
+                    <button class="acc-pill" data-user="Nguyễn Hoài Nam (Người dùng B)" data-color="#059669">
+                        <span class="acc-badge badge-b">B</span>
+                        <span class="acc-name">Nguyễn Hoài Nam</span>
+                        <span class="acc-role">(User B)</span>
+                    </button>
+                    <button class="acc-pill" data-user="Đặng Thành Thi (Người dùng C)" data-color="#D97706">
+                        <span class="acc-badge badge-c">C</span>
+                        <span class="acc-name">Đặng Thành Thi</span>
+                        <span class="acc-role">(User C)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Batch Sync Button (Lambda Closed-Loop: Speed -> HDFS Batch Layer) -->
+            <button id="btn-lambda-batch-sync" class="btn-lambda-sync" title="Kích hoạt chu kỳ đồng bộ định kỳ của Kiến trúc Lambda: Gom toàn bộ đánh giá mới cập nhật vào Hadoop HDFS và Parquet Data Lake">
+                <span class="sync-icon">🔄</span>
+                <span>Đồng Bộ Vào HDFS (Lambda Batch)</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Real-time Multi-User Demo Hint Banner -->
+    <div class="demo-tip-banner">
+        <div class="demo-tip-inner">
+            <span class="demo-tip-icon">✨</span>
+            <span><b>Hướng Dẫn Demo Đa Người Dùng Thời Gian Thực:</b> Mở 2 cửa sổ trình duyệt song song (hoặc Tab 1 thường + Tab 2 Ẩn danh): Tab 1 đóng vai <b>Người A (Nguyễn Trường Nhu)</b>, Tab 2 đóng vai <b>Người B (Nguyễn Hoài Nam)</b>. Khi Người A gửi nhận xét ở bất kỳ thẻ địa điểm nào, màn hình Người B sẽ <b>tự động nổ chuông, bật thông báo Toast thời gian thực</b> và chớp sáng cập nhật thẻ địa điểm mà không cần F5!</span>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container for Real-time Peer Events -->
+    <div id="realtime-toast-container" class="toast-container"></div>
+
+    <main class="dashboard-container">
+        <!-- KPI Metrics Grid -->
+        <section class="kpi-grid">
+            <div class="kpi-card glass-panel">
+                <div class="kpi-icon icon-blue">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Tổng Địa Điểm Du Lịch</span>
+                    <h3 class="kpi-value" id="kpi-total-spots">317</h3>
+                    <span class="kpi-sub">Phủ khắp 63 tỉnh/thành Việt Nam</span>
+                </div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-icon icon-emerald">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Cụm Phân Vùng K-Means</span>
+                    <h3 class="kpi-value">5 Vùng</h3>
+                    <span class="kpi-sub">Gom cụm không gian theo WGS84</span>
+                </div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-icon icon-purple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Tần Suất Kafka Stream</span>
+                    <h3 class="kpi-value">2.0s / Event</h3>
+                    <span class="kpi-sub" id="event-counter-text">Đang nhận dữ liệu trực tiếp...</span>
+                </div>
+            </div>
+
+            <div class="kpi-card glass-panel">
+                <div class="kpi-icon icon-amber">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Định Dạng Lưu Trữ Data Lake</span>
+                    <h3 class="kpi-value">Parquet Snappy</h3>
+                    <span class="kpi-sub">HDFS Distributed Cluster</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace: Split View (Map vs Live Feed) -->
+        <section class="main-split-view">
+            <!-- Left: Interactive Map -->
+            <div class="map-container glass-panel">
+                <div class="panel-header">
+                    <div class="panel-title-wrap">
+                        <span class="live-badge badge-blue">BẢN ĐỒ KHÔNG GIAN</span>
+                        <h2 class="panel-title">Phân Bố Cụm K-Means & Vị Trí Địa Điểm</h2>
+                    </div>
+                    <div class="cluster-legend">
+                        <span class="legend-chip cluster-0"><i class="dot c0"></i> Miền Bắc</span>
+                        <span class="legend-chip cluster-1"><i class="dot c1"></i> Bắc Trung Bộ</span>
+                        <span class="legend-chip cluster-2"><i class="dot c2"></i> Nam Trung Bộ</span>
+                        <span class="legend-chip cluster-3"><i class="dot c3"></i> Tây Nguyên</span>
+                        <span class="legend-chip cluster-4"><i class="dot c4"></i> Nam Bộ</span>
+                    </div>
+                </div>
+                <div id="vietnam-map" class="map-view"></div>
+            </div>
+
+            <!-- Right: Real-Time Stream Ingestion Feed -->
+            <div class="feed-container glass-panel">
+                <div class="panel-header">
+                    <div class="panel-title-wrap">
+                        <span class="live-badge badge-green">KAFKA • SPARK LIVE FEED</span>
+                        <h2 class="panel-title">Luồng Sự Kiện Xử Lý Thời Gian Thực</h2>
+                    </div>
+                    <span class="feed-counter" id="feed-counter-badge">0 sự kiện</span>
+                </div>
+
+                <div class="feed-scroll-box" id="feed-scroll-box">
+                    <!-- Cards will dynamically slide in here -->
+                    <div class="empty-feed-placeholder" id="empty-feed-placeholder">
+                        <div class="spinner"></div>
+                        <p>Đang lắng nghe luồng dữ liệu từ Kafka Topic <code>tourism-output</code>...</p>
+                        <small>Cứ mỗi 2 giây, thẻ sự kiện mới sẽ tự động trượt ra và nhấp nháy tại đây.</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-Time POI Directory with Community Reviews -->
+        <section class="spots-directory-section glass-panel">
+            <div class="panel-header" style="flex-wrap: wrap; gap: 1rem;">
+                <div class="panel-title-wrap">
+                    <span class="live-badge badge-green">COMMUNITY REVIEWS • PHẢN HỒI THỰC TẾ</span>
+                    <h2 class="panel-title">Khám Phá Địa Điểm & Đánh Giá Của Du Khách</h2>
+                    <p class="panel-desc">Tra cứu 317 điểm đến, xem nhận xét của người đi trước và để lại cảm nhận được lưu trữ vĩnh viễn vào HDFS Data Lake.</p>
+                </div>
+                
+                <!-- Search & Filters -->
+                <div class="directory-filter-bar">
+                    <div class="search-box-wrap">
+                        <input type="text" id="directory-search-input" placeholder="🔍 Tìm tên điểm hoặc tỉnh thành (vd: Bà Nà, Đà Lạt, Phú Quốc, biển)...">
+                    </div>
+                    <div class="cluster-filters" id="cluster-filter-buttons">
+                        <button class="filter-chip active" data-cluster="all">Tất cả</button>
+                        <button class="filter-chip" data-cluster="0">Miền Bắc</button>
+                        <button class="filter-chip" data-cluster="1">Bắc Trung Bộ</button>
+                        <button class="filter-chip" data-cluster="2">Nam Trung Bộ</button>
+                        <button class="filter-chip" data-cluster="3">Tây Nguyên</button>
+                        <button class="filter-chip" data-cluster="4">Nam Bộ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid of POI Cards with Live Reviews -->
+            <div class="spots-cards-grid" id="spots-cards-grid">
+                <!-- Injected dynamically by JS -->
+            </div>
+            
+            <!-- Quick Review Modal -->
+            <div id="review-modal" class="review-modal">
+                <div class="review-modal-content glass-panel">
+                    <div class="modal-header">
+                        <h3 id="modal-spot-name">✍️ Viết Đánh Giá Du Lịch</h3>
+                        <button id="btn-close-modal" class="btn-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-field">
+                            <label>Họ tên của bạn:</label>
+                            <input type="text" id="modal-user-name" value="Nguyễn Trường Nhu (HUIT)" placeholder="Nhập họ tên...">
+                        </div>
+                        <div class="modal-field">
+                            <label>Số sao đánh giá:</label>
+                            <select id="modal-rating-select">
+                                <option value="5.0">⭐⭐⭐⭐⭐ (5.0 / 5) - Xuất sắc</option>
+                                <option value="4.5">⭐⭐⭐⭐½ (4.5 / 5) - Rất tốt</option>
+                                <option value="4.0">⭐⭐⭐⭐ (4.0 / 5) - Tốt</option>
+                                <option value="3.5">⭐⭐⭐½ (3.5 / 5) - Bình thường</option>
+                            </select>
+                        </div>
+                        <div class="modal-field">
+                            <label>Lời nhận xét thực tế:</label>
+                            <textarea id="modal-comment" rows="3" placeholder="Nhập cảm nhận (vd: chỗ này đẹp lắm, vừa đi hôm qua có cả bình minh...)"></textarea>
+                        </div>
+                        <div class="modal-note">
+                            ⚡ Nhận xét này sẽ được bắn qua <b>Apache Kafka</b>, đồng bộ vào <b>HDFS Parquet Lake</b> và hiển thị ngay trên thẻ này cho mọi người cùng thấy!
+                        </div>
+                        <button id="btn-modal-submit" class="btn-primary" style="width: 100%;">
+                            🚀 Gửi Đánh Giá Ngay (Bắn Kafka Live)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Hiển thị Tiến trình Đồng bộ HDFS & Parquet Lake (Lambda Batch Sync) -->
+            <div id="batch-sync-modal" class="review-modal">
+                <div class="review-modal-content glass-panel" style="max-width: 620px;">
+                    <div class="modal-header">
+                        <h3 style="color:#1E293B; display:flex; align-items:center; gap:8px;">
+                            <span style="color:#2563EB;">🔄</span> Chu Trình Đồng Bộ Batch Layer (HDFS & Parquet)
+                        </h3>
+                        <button id="btn-close-sync-modal" class="btn-close">&times;</button>
+                    </div>
+                    <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+                        <p style="font-size: 0.85rem; color:#475569; margin-bottom: 1.1rem; line-height: 1.5;">
+                            Thực thi cơ chế <b>Closed-Loop Feedback</b> của Kiến trúc Lambda: Gom toàn bộ đánh giá mới từ tầng Streaming, cập nhật Master Dataset, đồng bộ phân tán lên <b>Hadoop HDFS (cổng 9000)</b> và xuất bản tệp nén cột <b>Snappy Parquet Data Lake</b>.
+                        </p>
+                        <div class="sync-steps-list" id="sync-steps-list">
+                            <div class="sync-step-item" id="step-item-1"><span class="step-icon">⏳</span> <span>Bước 1: Tổng hợp các bài đánh giá tích lũy từ người dùng...</span></div>
+                            <div class="sync-step-item" id="step-item-2"><span class="step-icon">⏳</span> <span>Bước 2: Cập nhật điểm Rating tích lũy vào Master Dataset...</span></div>
+                            <div class="sync-step-item" id="step-item-3"><span class="step-icon">⏳</span> <span>Bước 3: Đồng bộ phân tán Master Dataset lên cụm Hadoop HDFS (Port 9000)...</span></div>
+                            <div class="sync-step-item" id="step-item-4"><span class="step-icon">⏳</span> <span>Bước 4: Xuất bản định dạng cột nén Snappy Parquet Data Lake...</span></div>
+                            <div class="sync-step-item" id="step-item-5"><span class="step-icon">⏳</span> <span>Bước 5: Kiểm định chất lượng dữ liệu (Data Quality Check 100%)...</span></div>
+                            <div class="sync-step-item" id="step-item-6"><span class="step-icon">⏳</span> <span>Bước 6: Phát tín hiệu hoàn tất chu kỳ tới Apache Kafka topic 'tourism-output'...</span></div>
+                        </div>
+                        <div id="sync-result-box" class="sync-result-box" style="display:none; margin-top: 1.2rem; padding: 0.9rem; background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px;">
+                            <div style="font-weight:700; color:#166534; font-size:0.9rem; margin-bottom:0.4rem;">✅ ĐỒNG BỘ THÀNH CÔNG VÀO HDFS & DATA LAKE!</div>
+                            <div style="font-size:0.8rem; color:#14532D; line-height:1.6;" id="sync-result-details"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:0.5rem; padding:1rem 1.5rem;">
+                        <button id="btn-start-sync-action" class="btn-primary" style="background:#2563EB; border:none; padding:0.55rem 1.4rem; font-weight:700; border-radius:8px; color:#fff; cursor:pointer;">
+                            🚀 Kích Hoạt Đồng Bộ HDFS Ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Xem Toàn Bộ Đánh Giá (Facebook-style Comments Feed) -->
+            <div id="spot-comments-modal" class="review-modal">
+                <div class="fb-comments-modal-container glass-panel">
+                    <!-- Header -->
+                    <div class="fb-modal-header">
+                        <div class="fb-modal-spot-info">
+                            <img id="fb-modal-spot-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100%25' height='100%25' fill='%23e2e8f0'/%3E%3C/svg%3E" alt="Thumbnail" class="fb-modal-spot-thumb" onerror="this.onerror=null; this.src='/static/img/default.jpg';">
+                            <div class="fb-modal-titles">
+                                <div class="fb-modal-spot-title-row">
+                                    <h3 id="fb-modal-spot-name">#1 Bãi Dài Cam Ranh</h3>
+                                    <span class="fb-modal-rating-badge">★ <span id="fb-modal-rating-val">4.8</span></span>
+                                </div>
+                                <div class="fb-modal-sub-info">
+                                    <span id="fb-modal-spot-loc">📍 Khánh Hòa</span> • 
+                                    <span id="fb-modal-total-count" class="fb-modal-count-badge">0 đánh giá</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="btn-close-comments-modal" class="btn-close">&times;</button>
+                    </div>
+
+                    <!-- Filter / Sort Bar -->
+                    <div class="fb-filter-bar">
+                        <span class="fb-filter-title">💬 Bảng tin nhận xét & cảm nhận</span>
+                        <div class="fb-filter-chips">
+                            <button class="fb-filter-chip active" id="fb-filter-all" data-filter="all">Tất cả</button>
+                            <button class="fb-filter-chip" id="fb-filter-5star" data-filter="5">5 sao ⭐</button>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable Comments Feed -->
+                    <div class="fb-comments-list" id="fb-comments-list">
+                        <!-- Sẽ được nạp động các bong bóng bình luận Facebook -->
+                    </div>
+
+                    <!-- Sticky Facebook Comment Input Bar -->
+                    <div class="fb-input-area">
+                        <div class="fb-input-top-bar">
+                            <div class="fb-user-badge">
+                                <div class="fb-avatar mini-avatar" id="fb-current-user-avatar">NT</div>
+                                <span class="fb-input-user-name" id="fb-input-user-name">Nguyễn Trường Nhu</span>
+                            </div>
+                            <div class="fb-star-picker">
+                                <label for="fb-modal-rating-select">Đánh giá:</label>
+                                <select id="fb-modal-rating-select" class="fb-rating-dropdown">
+                                    <option value="5.0">⭐⭐⭐⭐⭐ 5.0 (Tuyệt vời)</option>
+                                    <option value="4.5">⭐⭐⭐⭐½ 4.5 (Rất tốt)</option>
+                                    <option value="4.0">⭐⭐⭐⭐ 4.0 (Tốt)</option>
+                                    <option value="3.5">⭐⭐⭐½ 3.5 (Khá)</option>
+                                    <option value="3.0">⭐⭐⭐ 3.0 (Bình thường)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="fb-input-row">
+                            <textarea id="fb-input-text" class="fb-comment-textarea" rows="2" placeholder="Viết nhận xét công khai về địa điểm này (bắn Kafka Live)..."></textarea>
+                            <button id="fb-btn-submit-comment" class="fb-submit-btn" title="Gửi nhận xét qua Kafka">
+                                <span class="fb-send-icon">🚀</span>
+                                <span>Gửi</span>
+                            </button>
+                        </div>
+                        <div class="fb-input-helper">
+                            ⚡ Bình luận của bạn sẽ được truyền trực tiếp qua <b>Apache Kafka & Spark Streaming</b>, lưu vào <b>HDFS Data Lake</b> và hiển thị tức thời!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Smart Recommendation & Itinerary Planner -->
+        <section class="recommendation-section glass-panel">
+
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <span class="live-badge badge-purple">ML ENGINE</span>
+                    <h2 class="panel-title">Gợi Ý Lịch Trình Thông Minh (TF-IDF & FP-Growth)</h2>
+                    <p class="panel-desc">Khám phá các điểm đến tương đồng về ngữ cảnh và các hoạt động gợi ý kèm theo dựa trên quy luật khai phá dữ liệu.</p>
+                </div>
+            </div>
+
+            <div class="recommendation-controls">
+                <div class="presets-row">
+                    <span class="presets-label">Phong cách du lịch mẫu:</span>
+                    <button class="preset-btn active" data-keywords="biển, tắm biển, nghĩ dưỡng, chụp ảnh">🏖️ Nghỉ dưỡng biển</button>
+                    <button class="preset-btn" data-keywords="chùa, di tích, lịch sử, văn hóa, tâm linh">🏛️ Di tích & Tâm linh</button>
+                    <button class="preset-btn" data-keywords="núi, thác, khám phá, trekking, thiên nhiên">⛰️ Trekking & Thiên nhiên</button>
+                    <button class="preset-btn" data-keywords="đi cùng gia đình, an toàn, ẩm thực, check-in">👨‍👩‍👧‍👦 Gia đình & Ẩm thực</button>
+                    <button class="preset-btn" data-keywords="cặp đôi, lãng mạn, hoàng hôn, ngắm cảnh">💑 Cặp đôi & Lãng mạn</button>
+                </div>
+
+                <div class="search-input-group">
+                    <input type="text" id="itinerary-input" placeholder="Nhập từ khóa sở thích (vd: biển, chụp ảnh, suối nước nóng, văn hóa)..." value="biển, tắm biển, nghĩ dưỡng, chụp ảnh">
+                    <button id="btn-run-recommend" class="btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        Phân Tích & Gợi Ý Lịch Trình
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recommendation Results Cards -->
+            <div class="recommendation-results" id="recommendation-results">
+                <!-- Injected by JS -->
+            </div>
+        </section>
+
+        <!-- Multi-Day Itinerary Planner (Haversine Distance Optimized) -->
+        <section class="multiday-section glass-panel">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <span class="live-badge badge-blue">HAVERSINE GEO-ROUTING</span>
+                    <h2 class="panel-title">Phân Tuyến Lịch Trình Đa Ngày (Tối Ưu Cự Ly Ngắn Nhất)</h2>
+                    <p class="panel-desc">Tự động gom cụm các địa điểm gần nhau nhất vào từng ngày theo công thức khoảng cách mặt cầu Haversine.</p>
+                </div>
+                <div class="region-switcher">
+                    <span style="font-size: 0.8rem; font-weight: 700; color: #64748B;">Khu vực:</span>
+                    <button class="region-btn active" data-region="Khánh Hòa">Khánh Hòa</button>
+                    <button class="region-btn" data-region="Lâm Đồng">Lâm Đồng</button>
+                    <button class="region-btn" data-region="Đà Nẵng">Đà Nẵng</button>
+                    <button class="region-btn" data-region="Hà Nội">Hà Nội</button>
+                    <button class="region-btn" data-region="Kiên Giang">Kiên Giang</button>
+                </div>
+            </div>
+
+            <div class="multiday-cards-grid" id="multiday-cards-grid" style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+                <!-- Days will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- Data Pipeline & Architecture Modal/Section -->
+        <section class="pipeline-diagram-section glass-panel">
+            <div class="panel-header">
+                <div class="panel-title-wrap">
+                    <span class="live-badge badge-blue">DATA PIPELINE FLOW</span>
+                    <h2 class="panel-title">Sơ Đồ Kiến Trúc Hệ Thống Phân Tán</h2>
+                </div>
+            </div>
+            
+            <div class="architecture-flow">
+                <div class="arch-box">
+                    <span class="arch-step">Bước 1 & 2</span>
+                    <h4>DATASET & PRODUCER</h4>
+                    <p>Excel gốc 317 điểm du lịch được Python Producer đọc từng dòng và bắn 2s/lần.</p>
+                </div>
+                <div class="arch-arrow">➔</div>
+                <div class="arch-box">
+                    <span class="arch-step">Bước 3</span>
+                    <h4>KAFKA INGEST</h4>
+                    <p>Topic <code>tourism-input</code> tạm giữ luồng sự kiện phân tán trên bộ nhớ RAM.</p>
+                </div>
+                <div class="arch-arrow">➔</div>
+                <div class="arch-box highlight">
+                    <span class="arch-step">Bước 4 & 5</span>
+                    <h4>SPARK & MLlib</h4>
+                    <p>Áp dụng K-Means gom cụm, TF-IDF lọc từ khóa, FP-Growth tìm luật, ghi HDFS Parquet.</p>
+                </div>
+                <div class="arch-arrow">➔</div>
+                <div class="arch-box">
+                    <span class="arch-step">Bước 6</span>
+                    <h4>KAFKA OUTPUT</h4>
+                    <p>Topic <code>tourism-output</code> bắn kết quả phân tích theo thời gian thực.</p>
+                </div>
+                <div class="arch-arrow">➔</div>
+                <div class="arch-box">
+                    <span class="arch-step">Bước 7</span>
+                    <h4>WEB LIVE</h4>
+                    <p>Trình duyệt tự động cập nhật thẻ mới, nhấp nháy mượt mà không cần F5 tải lại.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Custom App JS -->
+    <script src="/static/js/app.js?v=18"></script>
+</body>
+</html>
+

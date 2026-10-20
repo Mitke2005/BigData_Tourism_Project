@@ -1,0 +1,129 @@
+### 2026-10-18 02:14:34
+### hdfs dfs -ls -R /tourism_data (rut gon)
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/association_rules
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone/association_rules/job_id=job_1791920639147
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:45 /tourism_data/analytics_zone/association_rules/job_id=job_1791920719350
+drwxr-xr-x   - mitke supergroup          0 2026-10-15 12:52 /tourism_data/analytics_zone/association_rules/job_id=job_1792043445573
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:30 /tourism_data/analytics_zone/association_rules/job_id=job_1792243828905
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:33 /tourism_data/analytics_zone/association_rules/job_id=job_1792243978548
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:39 /tourism_data/analytics_zone/association_rules/job_id=job_1792244321732
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:57 /tourism_data/analytics_zone/association_rules/job_id=job_1792245406367
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/association_rules/job_id=job_1792250507020
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone/models
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/models/kmeans
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone/models/kmeans/job_id=job_1791920639147
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone/models/kmeans/job_id=job_1791920639147/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone/models/kmeans/job_id=job_1791920639147/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:45 /tourism_data/analytics_zone/models/kmeans/job_id=job_1791920719350
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:45 /tourism_data/analytics_zone/models/kmeans/job_id=job_1791920719350/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:45 /tourism_data/analytics_zone/models/kmeans/job_id=job_1791920719350/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-15 12:52 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792043445573
+drwxr-xr-x   - mitke supergroup          0 2026-10-15 12:52 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792043445573/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-15 12:52 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792043445573/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:30 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792243828905
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:30 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792243828905/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:30 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792243828905/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:33 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792243978548
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:33 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792243978548/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:33 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792243978548/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:39 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792244321732
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:39 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792244321732/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:39 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792244321732/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:57 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792245406367
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:57 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792245406367/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:57 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792245406367/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792250507020
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792250507020/data
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/models/kmeans/job_id=job_1792250507020/metadata
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/spots
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:44 /tourism_data/analytics_zone/spots/job_id=job_1791920639147
+drwxr-xr-x   - mitke supergroup          0 2026-10-14 02:45 /tourism_data/analytics_zone/spots/job_id=job_1791920719350
+drwxr-xr-x   - mitke supergroup          0 2026-10-15 12:52 /tourism_data/analytics_zone/spots/job_id=job_1792043445573
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:30 /tourism_data/analytics_zone/spots/job_id=job_1792243828905
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:33 /tourism_data/analytics_zone/spots/job_id=job_1792243978548
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:39 /tourism_data/analytics_zone/spots/job_id=job_1792244321732
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 20:57 /tourism_data/analytics_zone/spots/job_id=job_1792245406367
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/spots/job_id=job_1792250507020
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/checkpoints
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/checkpoints/streaming_checkpoint
+drwxr-xr-x   - mitke supergroup          0 2026-10-18 01:59 /tourism_data/checkpoints/streaming_checkpoint/commits
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3400
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3401
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3402
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3403
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3404
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3405
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3406
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3407
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3408
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:17 /tourism_data/checkpoints/streaming_checkpoint/commits/3409
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:18 /tourism_data/checkpoints/streaming_checkpoint/commits/3410
+-rw-r--r--   1 mitke supergroup         29 2026-10-18 00:18 /tourism_data/checkpoints/streaming_checkpoint/commits/3411
+### hdfs dfs -du -h /tourism_data
+795.4 K  2.3 M    /tourism_data/analytics_zone
+70.2 K   70.3 K   /tourism_data/checkpoints
+69.1 K   69.1 K   /tourism_data/curated_zone
+366.4 K  366.4 K  /tourism_data/processed_zone
+0        0        /tourism_data/raw_zone
+69.4 K   69.4 K   /tourism_data/streaming_checkpoint
+7.0 M    7.0 M    /tourism_data/streaming_zone
+### hdfs dfs -count -v -h
+   DIR_COUNT   FILE_COUNT       CONTENT_SIZE PATHNAME
+          45           64            795.4 K /tourism_data/analytics_zone
+           6          205             70.2 K /tourism_data/checkpoints
+           2            2             69.1 K /tourism_data/curated_zone
+           1            2            366.4 K /tourism_data/processed_zone
+           1            0                  0 /tourism_data/raw_zone
+           5          204             69.4 K /tourism_data/streaming_checkpoint
+           2        1.3 K              7.0 M /tourism_data/streaming_zone
+### hdfs fsck processed_zone
+Connecting to namenode via http://localhost:9870/fsck?ugi=mitke&files=1&blocks=1&locations=1&path=%2Ftourism_data%2Fprocessed_zone
+FSCK started by mitke (auth:SIMPLE) from /127.0.0.1 for path /tourism_data/processed_zone at Sun Oct 18 02:14:40 ICT 2026
+
+/tourism_data/processed_zone <dir>
+/tourism_data/processed_zone/DataSet_Enriched_Keywords.csv 177767 bytes, replicated: replication=1, 1 block(s):  OK
+0. BP-1278379541-127.0.1.1-1791054393594:blk_1073741826_1002 len=177767 Live_repl=1  [DatanodeInfoWithStorage[127.0.0.1:9866,DS-91f2bb6c-315d-475b-880b-4295be7ac9b2,DISK]]
+
+/tourism_data/processed_zone/tourism_dataset_clean.csv 197414 bytes, replicated: replication=1, 1 block(s):  OK
+0. BP-1278379541-127.0.1.1-1791054393594:blk_1073756252_15428 len=197414 Live_repl=1  [DatanodeInfoWithStorage[127.0.0.1:9866,DS-91f2bb6c-315d-475b-880b-4295be7ac9b2,DISK]]
+
+
+Status: HEALTHY
+ Number of data-nodes:	1
+ Number of racks:		1
+ Total dirs:			1
+ Total symlinks:		0
+
+Replicated Blocks:
+ Total size:	375181 B
+ Total files:	2
+ Total blocks (validated):	2 (avg. block size 187590 B)
+ Minimally replicated blocks:	2 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	1
+ Average block replication:	1.0
+ Missing blocks:		0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+ Blocks queued for replication:	0
+
+Erasure Coded Block Groups:
+ Total size:	0 B
+ Total files:	0
+ Total block groups (validated):	0
+ Minimally erasure-coded block groups:	0
+ Over-erasure-coded block groups:	0
+ Under-erasure-coded block groups:	0
+ Unsatisfactory placement block groups:	0
+ Average block group size:	0.0
+ Missing block groups:		0
+ Corrupt block groups:		0
+ Missing internal blocks:	0
+ Blocks queued for replication:	0
+FSCK ended at Sun Oct 18 02:14:40 ICT 2026 in 10 milliseconds
+
+
+The filesystem under path '/tourism_data/processed_zone' is HEALTHY

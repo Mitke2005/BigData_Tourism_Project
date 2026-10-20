@@ -1,0 +1,8 @@
+-rw-r--r--   3 mitke supergroup          0 2026-10-17 20:57 /tourism_data/analytics_zone/spots/job_id=job_1792245406367/_SUCCESS
+-rw-r--r--   3 mitke supergroup      79057 2026-10-17 20:57 /tourism_data/analytics_zone/spots/job_id=job_1792245406367/part-00000-1e7b6980-9fca-4dc7-ad75-30edc09fe34f-c000.snappy.parquet
+drwxr-xr-x   - mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/spots/job_id=job_1792250507020
+-rw-r--r--   3 mitke supergroup          0 2026-10-17 22:22 /tourism_data/analytics_zone/spots/job_id=job_1792250507020/_SUCCESS
+-rw-r--r--   3 mitke supergroup      79057 2026-10-17 22:22 /tourism_data/analytics_zone/spots/job_id=job_1792250507020/part-00000-d609ead9-2826-45fc-ad0d-c84d053dba01-c000.snappy.parquet
+drwxr-xr-x   - mitke supergroup          0 2026-10-18 02:15 /tourism_data/analytics_zone/spots/job_id=job_1792264511273
+-rw-r--r--   1 mitke supergroup          0 2026-10-18 02:15 /tourism_data/analytics_zone/spots/job_id=job_1792264511273/_SUCCESS
+-rw-r--r--   1 mitke supergroup      79057 2026-10-18 02:15 /tourism_data/analytics_zone/spots/job_id=job_1792264511273/part-00000-8706e229-9f1a-4537-9ff1-7ddd11a5b751-c000.snappy.parquet

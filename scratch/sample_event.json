@@ -1,0 +1,26 @@
+{
+  "cluster_id": 0,
+  "cluster_name": "Cụm 0 (Ninh Bình, Thái Bình, Hà Tĩnh - 19.9°N, 106.3°E)",
+  "color": "#3B82F6",
+  "event_id": "9288acaa-3791-4a52-a576-5865a927f3d8",
+  "event_type": "SIMULATED_VIEW",
+  "is_user_review": false,
+  "keywords": [
+    "\"chụp ảnh\"",
+    "\"tham quan\"",
+    "\"rừng\""
+  ],
+  "latitude": 20.2279425,
+  "location": "Nam Đinh",
+  "longitude": 106.5826006,
+  "name": "Vườn quốc gia Xuân Thủy",
+  "processed_at": "2026-10-11 03:03:04",
+  "rating": 4.6,
+  "review_rating": 4.6,
+  "review_text": "",
+  "stt": 43,
+  "t_spark_start_ms": 1791662584674,
+  "t_web_sse_ms": 1791662585562,
+  "timestamp": "2026-10-11 03:03:04",
+  "user_name": ""
+}

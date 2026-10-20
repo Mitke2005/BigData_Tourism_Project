@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C libraries
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Spark Checkpoints & Metastore
+metastore_db/
+derby.log
+checkpoint/
+checkpoint_lake/
+spark-warehouse/
+.checkpoint/
+
+# SQLite runtime DBs (nếu không cần commit dữ liệu tạm)
+*.db
+*.db-journal
+*.db-wal
+data/serving_store.db
+data/community_reviews.json
+
+# Temporary / OS files
+.DS_Store
+Thumbs.db
+*.log
+
