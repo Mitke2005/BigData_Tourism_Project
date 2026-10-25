@@ -112,9 +112,15 @@ def ensure_hdfs_services():
         subprocess.run(["wsl", "-e", "bash", "-c", bash_cmd],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
-        hadoop_home = os.environ.get("HADOOP_HOME", "C:/hadoop" if sys.platform.startswith('win') else "/usr/local/hadoop")
+        default_hadoop = "C:/hadoop" if sys.platform.startswith('win') else (
+            "/home/mitke/hadoop" if os.path.exists("/home/mitke/hadoop") else "/usr/local/hadoop"
+        )
+        hadoop_home = os.environ.get("HADOOP_HOME", default_hadoop)
         hadoop_home = os.path.abspath(hadoop_home).replace('\\', '/')
-        java_home = os.environ.get("JAVA_HOME", "C:/jdk-17" if sys.platform.startswith('win') else "/usr/lib/jvm/java-17-openjdk-amd64")
+        default_java = "C:/jdk-17" if sys.platform.startswith('win') else (
+            "/usr/lib/jvm/java-8-openjdk-amd64" if os.path.exists("/usr/lib/jvm/java-8-openjdk-amd64") else "/usr/lib/jvm/java-17-openjdk-amd64"
+        )
+        java_home = os.environ.get("JAVA_HOME", default_java)
         env = os.environ.copy()
         env["HADOOP_HOME"] = hadoop_home
         env["JAVA_HOME"] = java_home
@@ -123,10 +129,14 @@ def ensure_hdfs_services():
         hdfs_cmd = os.path.join(hadoop_home, "bin", hdfs_cmd_name)
         if not os.path.exists(hdfs_cmd):
             hdfs_cmd = hdfs_cmd_name
-        flags = (subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP) if sys.platform.startswith('win') else 0
-        if os.path.exists(hdfs_cmd) or not sys.platform.startswith('win'):
-            subprocess.Popen([hdfs_cmd, "namenode"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=flags)
-            subprocess.Popen([hdfs_cmd, "datanode"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=flags)
+        if not sys.platform.startswith('win') and os.path.exists(hdfs_cmd):
+            subprocess.run([hdfs_cmd, "--daemon", "start", "namenode"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run([hdfs_cmd, "--daemon", "start", "datanode"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        else:
+            flags = (subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP) if sys.platform.startswith('win') else 0
+            if os.path.exists(hdfs_cmd) or not sys.platform.startswith('win'):
+                subprocess.Popen([hdfs_cmd, "namenode"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=flags)
+                subprocess.Popen([hdfs_cmd, "datanode"], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=flags)
 
     # Chờ NameNode mở cổng 9000 (tối đa 25 giây)
     for _ in range(25):
@@ -178,9 +188,15 @@ def upload_dataset_to_hdfs():
         print(p_ls.stdout.strip())
     else:
         # === Chế độ Windows / Linux gốc ===
-        hadoop_home = os.environ.get("HADOOP_HOME", "C:/hadoop" if sys.platform.startswith('win') else "/usr/local/hadoop")
+        default_hadoop = "C:/hadoop" if sys.platform.startswith('win') else (
+            "/home/mitke/hadoop" if os.path.exists("/home/mitke/hadoop") else "/usr/local/hadoop"
+        )
+        hadoop_home = os.environ.get("HADOOP_HOME", default_hadoop)
         hadoop_home = os.path.abspath(hadoop_home).replace('\\', '/')
-        java_home = os.environ.get("JAVA_HOME", "C:/jdk-17" if sys.platform.startswith('win') else "/usr/lib/jvm/java-17-openjdk-amd64")
+        default_java = "C:/jdk-17" if sys.platform.startswith('win') else (
+            "/usr/lib/jvm/java-8-openjdk-amd64" if os.path.exists("/usr/lib/jvm/java-8-openjdk-amd64") else "/usr/lib/jvm/java-17-openjdk-amd64"
+        )
+        java_home = os.environ.get("JAVA_HOME", default_java)
         env = os.environ.copy()
         env["HADOOP_HOME"] = hadoop_home
         env["JAVA_HOME"] = java_home

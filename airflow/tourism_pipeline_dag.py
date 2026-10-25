@@ -16,13 +16,9 @@ import sys
 import json
 import subprocess
 from datetime import datetime, timedelta
-import sys
+
 from pathlib import Path
 
-PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
 if sys.platform.startswith('win'):
     try:
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -30,9 +26,24 @@ if sys.platform.startswith('win'):
     except Exception:
         pass
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# Resolve real path in case this DAG is symlinked into /home/mitke/airflow/dags/
+PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
+BASE_DIR = PROJECT_ROOT
+
+# Fallback check if BASE_DIR does not contain hadoop/hdfs_sync.py
+if not os.path.exists(os.path.join(BASE_DIR, "hadoop", "hdfs_sync.py")):
+    candidate_dirs = [
+        "/home/mitke/DOAN",
+        "/mnt/c/Users/Mitke/Downloads/DOAN/DOAN",
+        "c:/Users/Mitke/Downloads/DOAN/DOAN"
+    ]
+    for c_dir in candidate_dirs:
+        if os.path.exists(os.path.join(c_dir, "hadoop", "hdfs_sync.py")):
+            BASE_DIR = c_dir
+            break
+
 if BASE_DIR not in sys.path:
-    sys.path.append(BASE_DIR)
+    sys.path.insert(0, BASE_DIR)
 
 HDFS_URI = os.environ.get("HDFS_URI", "hdfs://localhost:9000")
 
@@ -73,67 +84,86 @@ def task_upload_master():
     """Task 2: Upload tập master dataset lên HDFS raw & processed zone nếu chưa có hoặc kiểm tra SHA-256."""
     print("[Task 2 - upload_master] Đảm bảo Master Dataset có mặt trên HDFS mà không ghi đè nếu trùng SHA-256...")
     sync_script = os.path.join(BASE_DIR, "hadoop", "hdfs_sync.py")
-    res = subprocess.run([sys.executable, sync_script], capture_output=True, text=True)
+    if not os.path.exists(sync_script):
+        raise FileNotFoundError(f"Không tìm thấy script hdfs_sync.py tại: {sync_script} (BASE_DIR={BASE_DIR})")
+    res = subprocess.run([sys.executable, sync_script], cwd=BASE_DIR, capture_output=True, text=True, encoding='utf-8', errors='replace')
     if res.returncode != 0:
         raise RuntimeError(f"Lỗi khi đồng bộ Master Dataset lên HDFS: {res.stderr or res.stdout}")
     print("[Task 2 - upload_master] Master Dataset đã được xác thực an toàn trên HDFS.")
     return "MASTER_ON_HDFS_VERIFIED"
 
+
 def task_run_batch_job():
-    """Chạy Spark Batch thực tế thông qua spark-submit."""
-
-    print("[Task 3] Khoi chay Spark Batch Training...")
-
-    batch_script = os.path.join(
-        BASE_DIR, "spark", "spark_batch_train.py"
-    )
+    """Task 3: Chạy PySpark MLlib Batch Training và nạp Kafka State Store qua spark-submit (WSL) hoặc sys.executable."""
+    print("[Task 3 - run_batch_job] Khởi chạy PySpark Batch Training...")
+    batch_script = os.path.join(BASE_DIR, "spark", "spark_batch_train.py")
+    if not os.path.exists(batch_script):
+        raise FileNotFoundError(f"Không tìm thấy script spark_batch_train.py tại: {batch_script} (BASE_DIR={BASE_DIR})")
 
     spark_submit = "/home/mitke/spark/bin/spark-submit"
     spark_python = "/home/mitke/airflow_venv/bin/python"
 
-    env = os.environ.copy()
+    if os.path.exists(spark_submit):
+        # Môi trường Spark 3.4.1 + Python 3.11 trong WSL đã kiểm chứng thành công
+        env = os.environ.copy()
+        env["SPARK_HOME"] = "/home/mitke/spark"
+        if os.path.exists(spark_python):
+            env["PYSPARK_PYTHON"] = spark_python
+            env["PYSPARK_DRIVER_PYTHON"] = spark_python
+        else:
+            env["PYSPARK_PYTHON"] = sys.executable
+            env["PYSPARK_DRIVER_PYTHON"] = sys.executable
+        env["SPARK_LOCAL_IP"] = "127.0.0.1"
 
-    env["SPARK_HOME"] = "/home/mitke/spark"
-    env["PYSPARK_PYTHON"] = spark_python
-    env["PYSPARK_DRIVER_PYTHON"] = spark_python
-    env["SPARK_LOCAL_IP"] = "127.0.0.1"
+        java_bin = "/usr/bin/java"
+        if os.path.exists(java_bin):
+            env["JAVA_HOME"] = os.path.dirname(os.path.dirname(os.path.realpath(java_bin)))
 
-    # Su dung Java da cai trong Ubuntu
-    env["JAVA_HOME"] = os.path.dirname(
-        os.path.dirname(os.path.realpath("/usr/bin/java"))
-    )
+        env["PYTHONPATH"] = BASE_DIR + os.pathsep + env.get("PYTHONPATH", "")
 
-    env["PYTHONPATH"] = (
-        BASE_DIR + os.pathsep + env.get("PYTHONPATH", "")
-    )
+        cmd = [
+            spark_submit,
+            "--master", "local[2]",
+            "--driver-memory", "2g",
+            "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1",
+            batch_script
+        ]
+        res = subprocess.run(
+            cmd,
+            cwd=BASE_DIR,
+            env=env,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace'
+        )
+    else:
+        # Fallback môi trường Windows/CLI
+        env = os.environ.copy()
+        env["PYTHONPATH"] = BASE_DIR + os.pathsep + env.get("PYTHONPATH", "")
+        res = subprocess.run(
+            [sys.executable, batch_script],
+            cwd=BASE_DIR,
+            env=env,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace'
+        )
 
-    res = subprocess.run(
-        [
-		 spark_submit,
-        	"--master", "local[2]",
-        	"--driver-memory", "2g",
-        	"--packages",
-        	"org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1",
-        	batch_script
-        ],
-        cwd=BASE_DIR,
-        env=env,
-        capture_output=True,
-        text=True
-    )
-
-    print(res.stdout[-10000:])
-
+    if res.stdout:
+        print(res.stdout[-10000:])
     if res.returncode != 0:
         raise RuntimeError(
             f"Spark Batch failed (code {res.returncode})\n"
-            f"STDOUT:\n{res.stdout[-6000:]}\n"
-            f"STDERR:\n{res.stderr[-12000:]}"
+            f"STDOUT:\n{res.stdout[-6000:] if res.stdout else ''}\n"
+            f"STDERR:\n{res.stderr[-12000:] if res.stderr else ''}"
         )
 
-    print("[Task 3] Spark Batch Training thanh cong!")
-
+    print("[Task 3] Spark Batch Training thành công!")
     return "BATCH_JOB_SUCCESS"
+
+
 def task_verify_quality():
     """
     Task 4: Đọc state topics qua KafkaConsumer:
